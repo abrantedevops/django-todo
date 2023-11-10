@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: app-dt
+  name: app-dt
+  namespace: dev-dt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-dt
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: app-dt
+    spec:
+      containers:
+      - image: app-dt:1.0.0
+        name: app-dt
+        resources: {}
+        ports:
+        - containerPort: 8000
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            configMapKeyRef:
+              name: dtconfig
+              key: mysql_user
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: db-secret
+              key: mysql-password
+        - name: MYSQL_HOST
+          value: dt-sqlite
+status: {}
