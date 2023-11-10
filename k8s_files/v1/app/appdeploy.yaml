@@ -19,7 +19,7 @@ spec:
         app: app-dt
     spec:
       containers:
-      - image: app-dt:1.0.0
+      - image: app-dt:1.1.0
         name: app-dt
         resources: {}
         ports:
