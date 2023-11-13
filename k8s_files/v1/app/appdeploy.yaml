@@ -19,22 +19,24 @@ spec:
         app: app-dt
     spec:
       containers:
-      - image: app-dt:1.1.0
+      - image: app-dt:2.1.1
         name: app-dt
-        resources: {}
+        imagePullPolicy: Never
+        command: ['sh', '-c', 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000']
+        resources: 
+          requests: 
+            cpu: 100m
+            memory: 100Mi
+          limits: 
+            cpu: 500m
+            memory: 500Mi
         ports:
         - containerPort: 8000
-        env:
-        - name: MYSQL_USER
-          valueFrom:
-            configMapKeyRef:
-              name: dtconfig
-              key: mysql_user
-        - name: MYSQL_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: db-secret
-              key: mysql-password
-        - name: MYSQL_HOST
-          value: dt-sqlite
+        volumeMounts:
+        - name: todo-perst-vol
+          mountPath: /data/db
+      volumes:
+      - name: todo-perst-vol
+        persistentVolumeClaim:
+          claimName: sqlite-pvc
 status: {}
