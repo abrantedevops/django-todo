@@ -21,8 +21,8 @@ spec:
       containers:
       - image: app-dt:2.1.1
         name: app-dt
-        imagePullPolicy: Never
         command: ['sh', '-c', 'python manage.py migrate && python manage.py runserver 0.0.0.0:8000']
+        imagePullPolicy: Never
         resources: 
           requests: 
             cpu: 100m

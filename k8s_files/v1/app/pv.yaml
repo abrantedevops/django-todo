@@ -7,6 +7,9 @@ spec:
     storage: 200Mi
   accessModes:
     - ReadWriteOnce
+  claimRef:
+    namespace: dev-dt
+    name: sqlite-pvc
   hostPath:
     type: DirectoryOrCreate
-    path: "/data"
+    path: "/data-q"
