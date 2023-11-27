@@ -1,0 +1,11 @@
+# Default values for YugabyteDB (https://github.com/yugabyte/charts/blob/master/stable/yugabyte/values.yaml)
+
+replicas:
+  master: 1
+  tserver: 1
+
+authCredentials:
+  ysql:
+    user: "yugabyte"
+    password: "yugabyte"
+    database: "djangotodo"

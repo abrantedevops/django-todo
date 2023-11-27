@@ -44,8 +44,8 @@ Cheers and Happy Coding :)
 <p align="justify"> 
 Faça o clone do repositório https://github.com/diegoep/django-todo. Essa é uma aplicação Python que roda um banco de dados Sqlite embarcado na aplicação. 
 
-1. Faça a construção da imagem docker da aplicação (lembre de rodar "eval $(minikube docker-env") para usar o docker do ambiente do minikube
-2. Crie os manifestos Kubernetes para implantar a aplicação django-todo e externalizar o acesso: Deployment, service, ingress
+1. Faça a construção da imagem docker da aplicação (lembre de rodar "eval $(minikube docker-env") para usar o docker do ambiente do minikube;
+2. Crie os manifestos Kubernetes para implantar a aplicação django-todo e externalizar o acesso: Deployment, service, ingress;
 3. Pesquise e indique como seria possível manter estado em múltiplas execuções, visto que a aplicação armazena os dados em um sqlite rodando no próprio container.
 </p>
 
@@ -82,4 +82,71 @@ A persistência de volume no Kubernetes permite armazenar dados de forma duráve
 - HostPath: Um volume que mapeia um diretório no nó do Kubernetes para o contêiner. É útil para acessar dados do sistema de arquivos do nó, mas não é adequado para ambientes de produção devido a limitações de segurança e escalabilidade.
 
 - PersistentVolume (PV) e PersistentVolumeClaim (PVC): Permitem provisionar armazenamento persistente de forma independente do ciclo de vida dos Pods. Um PV representa um volume físico no cluster, enquanto um PVC é uma solicitação feita pelos usuários para um PV. O administrador do cluster configura PVs e os usuários solicitam PVs usando PVCs.
+</p>
+
+
+## Atividade Prática - Helm
+
+<p align="justify"> 1. Faça a construção de uma nova imagem docker da aplicação que agora foi ajustada para se conectar ao Postgresql (lembre de rodar "eval $(minikube docker-env)" para usar o docker do ambiente do minikube).</p>
+
+<p align="justify">2. Faça a criação de um chart helm (helm create) para a aplicação django-todo. Essa será a entrega principal desta tarefa. O helm chart deve conter a implementação dos seguintes recursos: deployment, service, ingress e secret. Note que boa parte deles já são fornecidos ao utilizar o comando helm create. Ajuste a imagem do deployment para corresponder à imagem construída na etapa 1. Note que a aplicação utiliza uma conexão com o postgresq através das seguintes variáveis de ambiente: DB_NAME, DB_USER, DB_PASSWORD, DB_HOST, DB_PORT. Utilize um secret que será criado na instalação do chart para fornecer os valores dessas variáveis de ambiente.</p>
+
+<p align="justify">3. Para que a aplicação funcione, é necessário que um banco de dados Postgresql (ou compatível) esteja rodando. Para esta tarefa, vamos instalar o YugabyteDB, um banco de dados nativo na nuvem compatível com o driver do Postgresql. As instruções para instalar o chart helm do Yugabyte estão aqui: https://docs.yugabyte.com/preview/deploy/kubernetes/single-zone/oss/helm-chart/ - O código-fonte do chart do Yugabyte está disponível aqui: https://github.com/yugabyte/charts/tree/master/stable/yugabyte - Utilize a instalação do yugabyte de maneira independente ou vincule como dependência ao chart do django-todo através da instrução "dependencies" do Chart.yaml (rodando depois o comando "helm dependency update" para resolver as dependências do chart).</p>
+
+## Resolução
+
+<p align="justify">A. Sem dependência (Helm) e credenciais diretas no arquivo deployment.yaml da aplicação django-todo:</p>
+
+<p align="justify">Pré-requisitos:</p>
+
+- Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
+- eval $(minikube docker-env)
+
+```bash
+Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
+
+$ eval $(minikube docker-env)
+$ docker build -t django-todo:1.0.0 .
+$ kubectl create namespace yb-demo
+$ minikube addons enable ingress
+$ cd /helm/form1
+$ chmod +x deploy.sh
+$ ./deploy.sh
+$ kubectl port-forward svc/django-todo 8000:80 -n yb-demo
+
+acesse: http://django-todo.apps.com:8000
+```
+
+
+<p align="justify">B. Com depedência (helm) e credenciais diretas no manifesto secret.yaml</p>
+
+<p align="justify">Pré-requisitos:</p>
+
+- Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
+- eval $(minikube docker-env)
+
+```bash
+Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
+
+$ eval $(minikube docker-env)
+$ docker build -t django-todo:1.0.0 .
+$ kubectl create namespace yb-demo
+$ minikube addons enable ingress
+$ cd /helm/form2/django2-todo
+$ helm dependency update
+$ cd ..
+$ helm upgrade django2-todo ./django2-todo --install --namespace=yb-demo
+$ kubectl port-forward svc/django2-todo 8000:80 -n yb-demo
+
+acesse: http://django-todo.apps.com:8000
+```
+
+<br><br>
+
+<p align="center">
+    <img src="img/1.png" width="100%">
+    <br><br>
+    <img src="img/2.png" width="100%">
+    <br><br>
+    <img src="img/3.png" width="100%">
 </p>

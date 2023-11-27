@@ -6,7 +6,7 @@ RUN pip install django==3.2 psycopg2 psycopg2-binary
 
 COPY . .
 
-RUN python manage.py migrate
+# RUN python manage.py migrate
 
 EXPOSE 8000
 

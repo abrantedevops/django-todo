@@ -1,0 +1,6 @@
+dependencies:
+- name: yugabyte
+  repository: https://charts.yugabyte.com
+  version: 2.20.0+0
+digest: sha256:4c1051e7dc85bf6f58b8d77ad01bb388988dcfb0c7fda110c3a91ba352d82768
+generated: "2023-11-27T12:59:03.065148835-03:00"
