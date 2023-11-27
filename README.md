@@ -93,9 +93,9 @@ A persistência de volume no Kubernetes permite armazenar dados de forma duráve
 
 <p align="justify">3. Para que a aplicação funcione, é necessário que um banco de dados Postgresql (ou compatível) esteja rodando. Para esta tarefa, vamos instalar o YugabyteDB, um banco de dados nativo na nuvem compatível com o driver do Postgresql. As instruções para instalar o chart helm do Yugabyte estão aqui: https://docs.yugabyte.com/preview/deploy/kubernetes/single-zone/oss/helm-chart/ - O código-fonte do chart do Yugabyte está disponível aqui: https://github.com/yugabyte/charts/tree/master/stable/yugabyte - Utilize a instalação do yugabyte de maneira independente ou vincule como dependência ao chart do django-todo através da instrução "dependencies" do Chart.yaml (rodando depois o comando "helm dependency update" para resolver as dependências do chart).</p>
 
-## Resolução
+## Resoluções
 
-<p align="justify">A. Sem dependência (Helm) e credenciais diretas no arquivo deployment.yaml da aplicação django-todo:</p>
+<p align="justify">I. Sem dependência (Helm) e credenciais diretas no arquivo deployment.yaml da aplicação django-todo:</p>
 
 <p align="justify">Pré-requisitos:</p>
 
@@ -103,9 +103,6 @@ A persistência de volume no Kubernetes permite armazenar dados de forma duráve
 - eval $(minikube docker-env)
 
 ```bash
-Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
-
-$ eval $(minikube docker-env)
 $ docker build -t django-todo:1.0.0 .
 $ kubectl create namespace yb-demo
 $ minikube addons enable ingress
@@ -116,9 +113,9 @@ $ kubectl port-forward svc/django-todo 8000:80 -n yb-demo
 
 acesse: http://django-todo.apps.com:8000
 ```
+<hr>
 
-
-<p align="justify">B. Com depedência (helm) e credenciais diretas no manifesto secret.yaml</p>
+<p align="justify">II. Com depedência (helm) e credenciais diretas no manifesto secret.yaml</p>
 
 <p align="justify">Pré-requisitos:</p>
 
@@ -126,9 +123,6 @@ acesse: http://django-todo.apps.com:8000
 - eval $(minikube docker-env)
 
 ```bash
-Adicione no arquivo /etc/hosts: 127.0.0.1 django-todo.apps.com
-
-$ eval $(minikube docker-env)
 $ docker build -t django-todo:1.0.0 .
 $ kubectl create namespace yb-demo
 $ minikube addons enable ingress
